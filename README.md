@@ -89,12 +89,12 @@ To assess the performance of our defense methods, we employ a suite of standard 
 * **Accuracy:** The ratio of correctly predicted traffic signs to the total number of test samples.
     $$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}$$
 * **Precision (Macro):** Measures the model's reliability by calculating the average ratio of true positive predictions to the total number of positive predictions across all 43 classes[cite: 85, 93]. [cite_start]This prevents common signs (like 'Speed Limit 30') from overshadowing rare, critical signs[cite: 85].
-    $$\text{Precision}_{macro} = \frac{1}{N} \sum_{i=1}^{N} \frac{TP_i}{TP_i + FP_i}$$
+    $$\text{Precision} = \frac{1}{N} \sum_{i=1}^{N} \frac{TP_i}{TP_i + FP_i}$$
 * **Recall (Macro):** Measures the model's sensitivity by calculating the average ratio of true positives to the total number of actual instances for each class.
-    $$\text{Recall}_{macro} = \frac{1}{N} \sum_{i=1}^{N} \frac{TP_i}{TP_i + FN_i}$$
+    $$\text{Recall} = \frac{1}{N} \sum_{i=1}^{N} \frac{TP_i}{TP_i + FN_i}$$
 * **F1-Score (Macro):** The harmonic mean of Precision and Recall. This is our primary point of reference because it penalizes models that favor high-frequency classes, ensuring our defense works for every sign type in the GTSRB dataset.
     
-    $$\text{F1}_{macro} = \frac{1}{N} \sum_{i=1}^{N} 2 \cdot \frac{\text{Precision}_i \cdot \text{Recall}_i}{\text{Precision}_i + \text{Recall}_i}$$
+    $$\text{F1} = \frac{1}{N} \sum_{i=1}^{N} 2 \cdot \frac{\text{Precision}_i \cdot \text{Recall}_i}{\text{Precision}_i + \text{Recall}_i}$$
 * **Recovery Rate (%):** A custom metric designed to quantify the effectiveness of a defense relative to the impact of the attack. It represents the percentage of the F1-Score lost to sabotage that was successfully restored by the autoencoder.
     $$\text{Recovery Rate} = \frac{F1_{\text{defense}} - F1_{\text{attack}}}{F1_{\text{clean}} - F1_{\text{attack}}} \times 100$$
 Visualizing the Attack and Defenses
