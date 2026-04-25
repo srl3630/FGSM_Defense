@@ -27,7 +27,7 @@ This project quantitatively evaluates architectural defenses against adversarial
     * **F1 Score (Macro)**
     * **Recall**
     * **Precision**
-    * **Recovery Rate**([Custom Metric, Detailed below](#recovery-rate-))
+    * **Recovery Rate**([Custom Metric, Detailed below](#results--evaluation))
 
 ---
 
