@@ -130,7 +130,7 @@ Key terms:
 |                0.020 |      0.845 |        0.805 |       0.823 |    0.803 | Adversarial U-Net (Proposed) | 72.5%                 |
 
 
-The models were also stress tested against $\epsilon values to determine points of failure.
+The models were also stress tested against epsilon values to determine points of failure.
 
 ####![F1 Vs Epsilon](Graphs/F1vsEpsilon.png)
 
@@ -138,7 +138,7 @@ Overall the FGSM U-Net overperforms every other defense. The models struggles, h
 
 
 ### Qualitative Performance
-Below is a visual comparison of an original image, the FGSM perturbed image ($\epsilon = 0.1$), and the reconstructed outputs from our three defenses.
+Below is a visual comparison of an original image, the FGSM perturbed image (epsilon = 0.1), and the reconstructed outputs from our three defenses.
 
 #### Linear Blur
 ![Linear Blur](Graphs/Linear_Blur_FGSM.png)
