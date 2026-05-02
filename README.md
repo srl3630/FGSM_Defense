@@ -132,7 +132,8 @@ Key terms:
 
 The models were also stress tested against epsilon values to determine points of failure.
 
-####![F1 Vs Epsilon](Graphs/F1vsEpsilon.png)
+#### F1 Vs Epsilon
+![F1 Vs Epsilon](Graphs/F1vsEpsilon.png)
 
 Overall the FGSM U-Net overperforms every other defense. The models struggles, however, at low espilon values (0.01 and 0.025). It's theorized this may be due to the distribution of low epsilon values in it's training, which was 25% of the data being used, whereas 45% of the perturbed data used in training had an epislon between 0.25 and 2. The model likely is over-predicting noise in the image, leading to prediction degradation.
 
