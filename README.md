@@ -103,7 +103,6 @@ To assess the performance of our defense methods, we employ a suite of standard 
 * **Recovery Rate (%):** A custom metric designed to quantify the effectiveness of a defense relative to the impact of the attack. It represents the percentage of the F1 score lost to sabotage that was successfully restored by the autoencoder.
     $$\text{Recovery Rate} = \frac{F1_{\text{defense}} - F1_{\text{attack}}}{F1_{\text{clean}} - F1_{\text{attack}}} \times 100$$
 * **Degradation rate**  Identifies the percentage of images that were correctly classified in their raw state but became misclassified after processing.
-  $$\text{Degradation Rate} = \frac{N_{\text{correct}} - N_{\text{still\_correct}}}{N_{\text{correct}}} \times 100$$
 
        
 ---
