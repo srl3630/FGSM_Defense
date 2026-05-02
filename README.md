@@ -21,7 +21,7 @@ Performing image reconstruction via autoencoder architectures as a filter for ad
      
 - Denoising Autoencoders [\[4\]](#4): Research such as MagNet proposed the use of autoencoders to defend against adversarial examples. MagNet operates on the principle that adversarial perturbations push images away from the manifold of natural data. A first step is trained to determine whether the model has significant perturbations and a second model is used to predict an approximiation of the unperturbed data. This guides our DAE model in this project.
 
-- U-Net Architecture [\[3\]](#3): More complex architectures, such as DUNET, boast higher performance, by moving to a U-Net architecture. While usually used in biomedical image segmentation, they instead using it to predict the noise in an image, and remove it.
+- U-Net Architecture [\[3\]](#3): More complex architectures, such as DUNET, boast higher performance, by moving to a U-Net architecture. While usually used in biomedical image segmentation, they instead used it to predict the noise in an adversarial image, and remove it.
 
 ---
 
@@ -128,7 +128,7 @@ Key terms:
 | Adversarial Risk (FGSM) |                0.020 |      0.519 |        0.480 |
 
 #### Comparative Analysis of Risk Mitigation (Outer Minimizer)
-|   Sabotage (epsilon) |   Accuracy |   F1 (Macro) |   Precision |   Recall | Defense Strategy             | Recover Rate (%)   |
+|   Sabotage (epsilon) |   Accuracy |   F1 (Macro) |   Precision |   Recall | Defense Strategy             | Recovery Rate (%)   |
 |----------------------|------------|--------------|-------------|----------|------------------------------|-----------------------|
 |                0.020 |      0.519 |        0.480 |       0.507 |    0.482 | No Defense                   | 0.0%                  |
 |                0.020 |      0.546 |        0.510 |       0.538 |    0.515 | Linear Blur                  | 6.7%                  |
@@ -141,7 +141,7 @@ Key terms:
 
 The models were also stress tested against epsilon values to determine points of failure.
 
-Overall the FGSM U-Net overperforms every other defense. The models struggles, however, at low espilon values (0.01 and 0.025). It's theorized this may be due to the distribution of low epsilon values in it's training, which was 25% of the data being used, whereas 45% of the perturbed data used in training had an epislon between 0.25 and 2. The model likely is over-predicting noise in the image, leading to prediction degradation.
+Overall the FGSM U-Net overperforms every other defense. The model struggles, however, at low espilon values (0.01 and 0.025). It's theorized this may be due to the distribution of low epsilon values in its training, which was 25% of the data being used, whereas 45% of the perturbed data used in training had an epislon between 0.25 and 2. The model likely is over-predicting noise in the image, leading to prediction degradation.
 
 #### Degradation Rate
 
