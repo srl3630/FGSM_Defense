@@ -4,26 +4,24 @@
 
 ## Introduction
 
-Neural Network based classification models are vulnerable to adversarial attacks, and even imperceptible changes to the human eye can drastically throw off predictions. 
+Neural Network based classification models are vulnerable to adversarial attacks, and even imperceptible changes to the human eye can dramatically throw off predictions. 
 
-This tutorial utilizes the German Traffic Sign Recognition Benchmark (GTSRB)[\[2\]](#2) to explore the Fast Gradient Sign Method (FGSM)[\[1\]](#1). We evaluate three different defense mechanisms aimed at removing these adversarial perturbations before they reach the classifier::
+This tutorial utilizes the German Traffic Sign Recognition Benchmark (GTSRB)[\[2\]](#2) to explore the Fast Gradient Sign Method (FGSM)[\[1\]](#1). We evaluate three different defense mechanisms aimed at removing these adversarial perturbations before they reach the classifier:
 
 1.  **Linear Blur** (Baseline)
-3.  **Standard Autoencoder**
-4.  **U-Net Autoencoder**
+2.  **Standard Autoencoder**
+3.  **U-Net Autoencoder**
 
 > **Note:** This repository contains a fully runnable Jupyter Notebook designed for **Google Colab** (L4 GPU instance recommended). There are no prerequisites to run the code; it is fully self-contained.
 
 ## Related Work & Motivation
 
-The concept of performing image reconstruction via autoencoder architectures as a filter for adversarial noise is a well-established area of research. This project builds upon two prominent defensive philosophies
+Performing image reconstruction via autoencoder architectures as a filter for adversarial noise is a well established area of research. This project builds upon two prominent defensive philosophies.
      
      
-- Manifold Projection[\[4\]](#4)): Research such as MagNet proposed the use of autoencoders to defend against adversarial examples. MagNet operates on the principle that adversarial perturbations push images away from the manifold of natural data. A first step is trained to determine whether the model has significant perturbations and a second model is used to predict an approximiation of the unperturbed data. This guides or DAE model in this project.
+- Denoising Autoencoders [\[4\]](#4): Research such as MagNet proposed the use of autoencoders to defend against adversarial examples. MagNet operates on the principle that adversarial perturbations push images away from the manifold of natural data. A first step is trained to determine whether the model has significant perturbations and a second model is used to predict an approximiation of the unperturbed data. This guides our DAE model in this project.
 
-- Guided Denoising[\[3\]](#3)): More complex architectures, such as DUNET, boast higher performance, by moving to a U-Net architecture, which is usually used in biomedical image segmentation, and instead using it to predict the noise in an image, and remove it.
-
-By comparing a simple Linear Blur against these neural network reconstruction methods, we can quantitatively measure the "Recovery Rate"  of the system's operational safety.
+- U-Net Architecture [\[3\]](#3): More complex architectures, such as DUNET, boast higher performance, by moving to a U-Net architecture. While usually used in biomedical image segmentation, they instead using it to predict the noise in an image, and remove it.
 
 ---
 
@@ -38,7 +36,8 @@ This project quantitatively evaluates architectural defenses against adversarial
     * **F1 Score (Macro)**
     * **Recall**
     * **Precision**
-    * **Recovery Rate**([Custom Metric, Detailed below](#results--evaluation))
+    * **Recovery Rate**(described in the [Quantitative Performance](#quantitative-performance) section)
+    * **Degradation Rate** (described in the [Quantitative Performance](#quantitative-performance) section)
  * More broadly, the saddle-point (min-max) problem in the literature is used to view the problem (described in the #Quantitative Performance section_
 
 ---
@@ -103,6 +102,11 @@ To assess the performance of our defense methods, we employ a suite of standard 
     $$\text{F1} = \frac{1}{N} \sum_{i=1}^{N} 2 \cdot \frac{\text{Precision}_i \cdot \text{Recall}_i}{\text{Precision}_i + \text{Recall}_i}$$
 * **Recovery Rate (%):** A custom metric designed to quantify the effectiveness of a defense relative to the impact of the attack. It represents the percentage of the F1 score lost to sabotage that was successfully restored by the autoencoder.
     $$\text{Recovery Rate} = \frac{F1_{\text{defense}} - F1_{\text{attack}}}{F1_{\text{clean}} - F1_{\text{attack}}} \times 100$$
+* **Degradation rate**  Identifies the percentage of images that were correctly classified in their raw state but became misclassified after processing.
+  $$\text{Degradation Rate} = \frac{N_{\text{correct}} - N_{\text{still\_correct}}}{N_{\text{correct}}} \times 100$$
+
+       
+---
 
 ### Quantitative Performance
 We evaluate defense success through the lens of a saddle-point (min-max) problem, a framework established by Madry et al. (2018)[\[5\]](#5) to analyze adversarial robustness. This model centers around an attack and defense which push and pull a model's loss in different directions. All tests were performed by applying the associated defense method and the performing a prediction using the output with the CNN classifier previously trained on GTSRB data.
@@ -130,12 +134,27 @@ Key terms:
 |                0.020 |      0.845 |        0.805 |       0.823 |    0.803 | Adversarial U-Net (Proposed) | 72.5%                 |
 
 
-The models were also stress tested against epsilon values to determine points of failure.
-
 #### F1 Vs Epsilon
 ![F1 Vs Epsilon](Graphs/F1vsEpsilon.png)
 
+The models were also stress tested against epsilon values to determine points of failure.
+
 Overall the FGSM U-Net overperforms every other defense. The models struggles, however, at low espilon values (0.01 and 0.025). It's theorized this may be due to the distribution of low epsilon values in it's training, which was 25% of the data being used, whereas 45% of the perturbed data used in training had an epislon between 0.25 and 2. The model likely is over-predicting noise in the image, leading to prediction degradation.
+
+#### Degradation Rate
+
+While defense is great, it may not be free. In real world systems, we need to ensure a low false positive rate to ensure we're not inadvertantly making the model make bad predictions, when it otherwise wouldn't have.
+
+We can observed the degradation rate of each model below:
+
+
+| Defense Strategy   |  Degradation Rate   |
+|--------------------|--------------------------|
+| Linear Blur        | 43.32%                   |
+| Standard AE        | 1.98%                    |
+| Adversarial U-Net  | 0.03%                    |
+
+As the models get better in accordance with our previous analysis, the degradation rate almost vanishes, and our cleaning tax becomes increasingly cheap, dropping to a low of 0.03 with our best model (the Adversarial U-Net)
 
 
 ### Qualitative Performance
@@ -146,8 +165,8 @@ Below is a visual comparison of an original image, the FGSM perturbed image (eps
 
 The Linear/Gaussian Blur we use as our baseline defense performs very poorly as expected. The image definitely gets slightly more discernable, but it's very easy to see why a small prediction model may have issues with prediction. The blur does what it's meant to do and smooths out the image.
 
-#### Denoising Autoencoeder Trained on FGSM
-![Denoising Autoencoeder Trained on FGSM](Graphs/DAE_FGSM.png)
+#### Denoising Autoencoder Trained on FGSM
+![Denoising Autoencoder Trained on FGSM](Graphs/DAE_FGSM.png)
 
 The Denoising autoencoder performs much better. The images outputted are discernible, but may have some finer details removed. We can see in the images, the head of the truck and the person on the last image have become more amorphous. Interestingly, the arrows and numbers are preserved fairly well, but they're also preserved fairly well in the noised image, which would explain this. This may be an artifact of the model attempting to predict the entire de-noised image vs our noise prediction approach on the U-Net.
 
@@ -156,6 +175,13 @@ The Denoising autoencoder performs much better. The images outputted are discern
 
 The U-Net so far appears the best. Where the standard DAE failed, the U-Net was able to preserve the finer details of the truck and the person in the first and last image, while retaining all of the strengths of the DAE for the middle images. This can likely be attributed to the lower amount of work the U-Net is doing when it only subtracts the noise, instead of predicting what the clean image looks like.
 
+### Analyzing Failure States
+
+Below are the failed predictions based on output from the U-Net.
+
+![Failure States](Graphs/Failure_States.png)
+
+Looking at these images, it seems it would be very easy for a human to discern the same categorization based on the output of the U-Net. It does appear the U-Net did a fairly good job of attack mitigation, the issue more likely lies in the capabilities of the classifier. A larger classification model, or a classification model fine tuned on the results of the U-Net may have yielded better results. Additional fine tuning of the U-Net does not appear necessary based on these images.
 
 ---
 
@@ -163,11 +189,14 @@ The U-Net so far appears the best. Where the standard DAE failed, the U-Net was 
 
 * **Linear Blur** proved to be an inadequate defense, often dropping the baseline accuracy on clean images without significantly de-noising the FGSM attack.
 * **The Standard Autoencoder** successfully removed some adversarial noise but suffered from detail loss, performed middle of the pack.
-* **The U-Net Autoencoder** provided the best trade-off. By utilizing skip connections, it successfully removed the FGSM perturbations while preserving the integrity of the original images, resulting in the highest defense success rate. The images looked the cleanest'
+* **The U-Net Autoencoder** provided the best trade-off. By utilizing skip connections, it successfully removed the FGSM perturbations while preserving the integrity of the original images, resulting in the highest defense success rate. The images looked the cleanest.
 
 ## Future Work
 
-Future
+Future work
+- Evaluate defenses against iterative attacks like PGD or adaptive adversaries that specifically target the U-Net's skip connections to induce reconstruction artifacts.
+- Attempt different training structures to ensure that model performance doesn't drop off at low epsilon values.
+- Perform additional fine tuning on the classifier model based on the output of the U-Net.
 
 ## References
 
