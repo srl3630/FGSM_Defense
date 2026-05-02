@@ -104,7 +104,7 @@ To assess the performance of our defense methods, we employ a suite of standard 
     $$\text{Recovery Rate} = \frac{F1_{\text{defense}} - F1_{\text{attack}}}{F1_{\text{clean}} - F1_{\text{attack}}} \times 100$$
 * **Degradation rate**  Identifies the percentage of images that were correctly classified in their raw state but became misclassified after processing.
   $$\text{Degradation Rate} = \left( 1 - \frac{|C \cap D|}{|C|} \right) \times 100\%$$
-  - ∣C∣: The set of images correctly classified in the baseline (clean) state.
+  - ∣C∣: The set of images correctly classified in the baseline state.
   - ∣C∩D∣: The subset of those images that remain correct after the defense is applied.
 
        
