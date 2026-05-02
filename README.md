@@ -100,9 +100,12 @@ To assess the performance of our defense methods, we employ a suite of standard 
     $$\text{Recall} = \frac{1}{N} \sum_{i=1}^{N} \frac{TP_i}{TP_i + FN_i}$$
 * **F1-Score (Macro):** The harmonic mean of Precision and Recall. This is our primary metric as it weights the disparate class evenly.
     $$\text{F1} = \frac{1}{N} \sum_{i=1}^{N} 2 \cdot \frac{\text{Precision}_i \cdot \text{Recall}_i}{\text{Precision}_i + \text{Recall}_i}$$
-* **Recovery Rate (%):** A custom metric designed to quantify the effectiveness of a defense relative to the impact of the attack. It represents the percentage of the F1 score lost to sabotage that was successfully restored by the autoencoder.
+* **Recovery Rate (%):** A metric designed to quantify the effectiveness of a defense relative to the impact of the attack. It represents the percentage of the F1 score lost to sabotage that was successfully restored by the autoencoder.
     $$\text{Recovery Rate} = \frac{F1_{\text{defense}} - F1_{\text{attack}}}{F1_{\text{clean}} - F1_{\text{attack}}} \times 100$$
 * **Degradation rate**  Identifies the percentage of images that were correctly classified in their raw state but became misclassified after processing.
+  $$\text{Degradation Rate} = \left( 1 - \frac{|C \cap D|}{|C|} \right) \times 100\%$$
+  - ∣C∣: The set of images correctly classified in the baseline (clean) state.
+  - ∣C∩D∣: The subset of those images that remain correct after the defense is applied.
 
        
 ---
@@ -125,7 +128,7 @@ Key terms:
 | Adversarial Risk (FGSM) |                0.020 |      0.519 |        0.480 |
 
 #### Comparative Analysis of Risk Mitigation (Outer Minimizer)
-|   Sabotage (epsilon) |   Accuracy |   F1 (Macro) |   Precision |   Recall | Defense Strategy             | Risk Mitigation (%)   |
+|   Sabotage (epsilon) |   Accuracy |   F1 (Macro) |   Precision |   Recall | Defense Strategy             | Recover Rate (%)   |
 |----------------------|------------|--------------|-------------|----------|------------------------------|-----------------------|
 |                0.020 |      0.519 |        0.480 |       0.507 |    0.482 | No Defense                   | 0.0%                  |
 |                0.020 |      0.546 |        0.510 |       0.538 |    0.515 | Linear Blur                  | 6.7%                  |
