@@ -50,6 +50,7 @@ This notebook is designed to be plug-and-play on Google Colab.
 1.  Open the `Computer_Vision_Project.ipynb` in Google Colab.
 2.  Go to **Runtime** -> **Change runtime type**.
 3.  Select **GPU** as the hardware accelerator (an L4 GPU was used for development and is highly recommended for training the Autoencoders).
+4.  Hit "Run all", and the notebook should run with no interaction required.
 
 ### 2. Kaggle Dataset Download
 The notebook automatically downloads the required **GTSRB - German Traffic Sign Recognition Benchmark** dataset directly from Kaggle using the `kagglehub` library. No manual API setup or credentials are required.
